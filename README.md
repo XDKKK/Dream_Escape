@@ -1,4 +1,4 @@
-# Escape_Dream
+# Dream_Escape
 
 ## 간단한 게임소개
 
