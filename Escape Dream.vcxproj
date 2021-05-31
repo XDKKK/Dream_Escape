@@ -24,6 +24,7 @@
     <ProjectGuid>{b944f86d-59ea-42b2-b1d2-e58cbd95e5fc}</ProjectGuid>
     <RootNamespace>EscapeDream</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Escape Dream</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

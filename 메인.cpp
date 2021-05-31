@@ -11,15 +11,17 @@
 
 SceneID field1, field2, field3, field4, field5, gameroom1, gameroom2, maze[7];
 
-ObjectID NPC1, NPC2; //상호작용을 위한 캐릭터 오브젝트
-ObjectID mover1, mover2, mover3, mover4, mover5, mover6, mover7, mover8, mazemover[24], pt1, pt2; //이동 관련 오브젝트
-ObjectID bk[22], notion, hiddenroad[4];
+ObjectID NPC1, NPC2, checkNPC1; //상호작용을 위한 캐릭터 오브젝트
+ObjectID mover1, mover2, mover3, mover4, mover5, mover6, mover7, mover8, mazemover[24], pt1, pt2, pt3; //이동 관련 오브젝트
+ObjectID bk[22], notion, hiddenroad[4], block[9];
 char buf[50];
 
 int bkX1 = 296, bkX2 = 356, bkX3 = 416, bkX4 = 476, bkX5 = 536, bkX6 = 596, bkX7 = 656, bkX8 = 716, bkX9 = 776, bkX10 = 836, bkX11 = 896, bkX12 = 956,
 bkY1 = 400, bkY2 = 460, bkY3 = 520, bkY4 = 580, bkY5 = 640, bkY6 = 700, bkY7 = 760, bkY8 = 820,
 G1X = 356, G1Y = 460; //게임1 내의 xy좌표
 bool hide = false; //게임1 진행시 불타입
+int bX0 = 200, bX1 = 350, bX2 = 500, bY0 = 100, bY1 = 250, bY2 = 400;	
+bool stb0 = true, stb1 = false, stb2 = true, stb3 = false, stb4 = true, stb5 = false, stb6 = true, stb7 = false, stb8 = true; //게임2 진행시 블록의 불타입
 bool ptshown1 = true, ptshown2 = true;//룸4,5에서 포탈 보이기 불타입
 int Key = 0; //Key변수가 2가 되면 메인룸에 미로로 가는 입구 생성
 int mazemoveX1 = 80, mazemoveX2 = 520, mazemoveX3 = 970, mazemoveY1 = 160, mazemoveY2 = 40, mazemoveY3 = 250; //미로 내의 이동버튼의 xy좌표
@@ -123,9 +125,12 @@ bool collidedLeft() {     //gameroom1에서 오른쪽 -> 왼쪽 충돌 판단 함수!!
 
 // wasd 이동버튼 충돌 판정
 
+
+
+
 void MouseCallback1(ObjectID Object, int x, int y, MouseAction action) {
 	if (Object == NPC1) { 
-		showMessage("여긴 어디지??\n화살표를 눌러 주위를 둘러보자");
+		showMessage("여긴 어디지??\n화살표를 눌러 주위를 둘러보자\n분홍색 화살표들은 클릭하면 이동할 수 있다!");
 		setObjectImage(NPC1, "Images1/npc_2.png");
 		locateObject(NPC1, field1, 400, 200);
 		showObject(mover1);
@@ -160,7 +165,103 @@ void MouseCallback1(ObjectID Object, int x, int y, MouseAction action) {
 		enterScene(gameroom1);
 		
 	}
+	else if (Object == pt3) {
+		enterScene(gameroom2);
+	}
+	else if (Object == block[0]) { //여기서부터 게임룸2의 마우스 콜백
+		if (stb0) { hideObject(block[0]); setObjectImage(block[0], "Images1/blockp4.jpg"); showObject(block[0]); stb0 = false; }
+		else { hideObject(block[0]); setObjectImage(block[0], "Images1/blockg2.png"); showObject(block[0]); stb0 = true; }
+		if (stb1) { hideObject(block[1]); setObjectImage(block[1], "Images1/blockp4.jpg"); showObject(block[1]); stb1 = false; }
+		else { hideObject(block[1]); setObjectImage(block[1], "Images1/blockg2.png"); showObject(block[1]); stb1 = true; }
+		if (stb3) { hideObject(block[3]); setObjectImage(block[3], "Images1/blockp4.jpg"); showObject(block[3]); stb3 = false; }
+		else { hideObject(block[3]); setObjectImage(block[3], "Images1/blockg2.png"); showObject(block[3]); stb3 = true; }
+	}
+	else if (Object == block[1]) {
+		if (stb1) { hideObject(block[1]); setObjectImage(block[1], "Images1/blockp4.jpg"); showObject(block[1]); stb1 = false; }
+		else { hideObject(block[1]); setObjectImage(block[1], "Images1/blockg2.png"); showObject(block[1]); stb1 = true; }
+		if (stb0) {hideObject(block[0]); setObjectImage(block[0], "Images1/blockp4.jpg"); showObject(block[0]); stb0 = false;}
+		else {hideObject(block[0]); setObjectImage(block[0], "Images1/blockg2.png"); showObject(block[0]); stb0 = true;}
+		if (stb2) { hideObject(block[2]); setObjectImage(block[2], "Images1/blockp4.jpg"); showObject(block[2]); stb2 = false; }
+		else { hideObject(block[2]); setObjectImage(block[2], "Images1/blockg2.png"); showObject(block[2]); stb2 = true; }
+		if (stb4) { hideObject(block[4]); setObjectImage(block[4], "Images1/blockp4.jpg"); showObject(block[4]); stb4 = false; }
+		else { hideObject(block[4]); setObjectImage(block[4], "Images1/blockg2.png"); showObject(block[4]); stb4 = true; }
+	}
+	else if (Object == block[2]) {
+		if (stb2) { hideObject(block[2]); setObjectImage(block[2], "Images1/blockp4.jpg"); showObject(block[2]); stb2 = false; }
+		else { hideObject(block[2]); setObjectImage(block[2], "Images1/blockg2.png"); showObject(block[2]); stb2 = true; }
+		if (stb1) { hideObject(block[1]); setObjectImage(block[1], "Images1/blockp4.jpg"); showObject(block[1]); stb1 = false; }
+		else { hideObject(block[1]); setObjectImage(block[1], "Images1/blockg2.png"); showObject(block[1]); stb1 = true; }
+		if (stb2) { hideObject(block[5]); setObjectImage(block[5], "Images1/blockp4.jpg"); showObject(block[5]); stb5 = false; }
+		else { hideObject(block[5]); setObjectImage(block[5], "Images1/blockg2.png"); showObject(block[5]); stb5 = true; }
+	}
+	else if (Object == block[3]) {
+		if (stb3) { hideObject(block[3]); setObjectImage(block[3], "Images1/blockp4.jpg"); showObject(block[3]); stb3 = false; }
+		else { hideObject(block[3]); setObjectImage(block[3], "Images1/blockg2.png"); showObject(block[3]); stb3 = true; }
+		if (stb0) { hideObject(block[0]); setObjectImage(block[0], "Images1/blockp4.jpg"); showObject(block[0]); stb0 = false; }
+		else { hideObject(block[0]); setObjectImage(block[0], "Images1/blockg2.png"); showObject(block[0]); stb0 = true; }
+		if (stb4) { hideObject(block[4]); setObjectImage(block[4], "Images1/blockp4.jpg"); showObject(block[4]); stb4 = false; }
+		else { hideObject(block[4]); setObjectImage(block[4], "Images1/blockg2.png"); showObject(block[4]); stb4 = true; }
+		if (stb6) { hideObject(block[6]); setObjectImage(block[6], "Images1/blockp4.jpg"); showObject(block[6]); stb6 = false; }
+		else { hideObject(block[6]); setObjectImage(block[6], "Images1/blockg2.png"); showObject(block[6]); stb6 = true; }
+	}
+	else if (Object == block[4]) {
+		if (stb4) { hideObject(block[4]); setObjectImage(block[4], "Images1/blockp4.jpg"); showObject(block[4]); stb4 = false; }
+		else { hideObject(block[4]); setObjectImage(block[4], "Images1/blockg2.png"); showObject(block[4]); stb4 = true; }
+		if (stb1) { hideObject(block[1]); setObjectImage(block[1], "Images1/blockp4.jpg"); showObject(block[1]); stb1 = false; }
+		else { hideObject(block[1]); setObjectImage(block[1], "Images1/blockg2.png"); showObject(block[1]); stb1 = true; }
+		if (stb3) { hideObject(block[3]); setObjectImage(block[3], "Images1/blockp4.jpg"); showObject(block[3]); stb3 = false; }
+		else { hideObject(block[3]); setObjectImage(block[3], "Images1/blockg2.png"); showObject(block[3]); stb3 = true; }
+		if (stb5) { hideObject(block[5]); setObjectImage(block[5], "Images1/blockp4.jpg"); showObject(block[5]); stb5 = false; }
+		else { hideObject(block[5]); setObjectImage(block[5], "Images1/blockg2.png"); showObject(block[5]); stb5 = true; }
+		if (stb7) { hideObject(block[7]); setObjectImage(block[7], "Images1/blockp4.jpg"); showObject(block[7]); stb7 = false; }
+		else { hideObject(block[7]); setObjectImage(block[7], "Images1/blockg2.png"); showObject(block[7]); stb7 = true; }
+	}
+	else if (Object == block[5]) {
+		if (stb5) { hideObject(block[5]); setObjectImage(block[5], "Images1/blockp4.jpg"); showObject(block[5]); stb5 = false; }
+		else { hideObject(block[5]); setObjectImage(block[5], "Images1/blockg2.png"); showObject(block[5]); stb5 = true; }
+		if (stb2) { hideObject(block[2]); setObjectImage(block[2], "Images1/blockp4.jpg"); showObject(block[2]); stb2 = false; }
+		else { hideObject(block[2]); setObjectImage(block[2], "Images1/blockg2.png"); showObject(block[2]); stb2 = true; }
+		if (stb4) { hideObject(block[4]); setObjectImage(block[4], "Images1/blockp4.jpg"); showObject(block[4]); stb4 = false; }
+		else { hideObject(block[4]); setObjectImage(block[4], "Images1/blockg2.png"); showObject(block[4]); stb4 = true; }
+		if (stb8) { hideObject(block[8]); setObjectImage(block[8], "Images1/blockp4.jpg"); showObject(block[8]); stb8 = false; }
+		else { hideObject(block[8]); setObjectImage(block[8], "Images1/blockg2.png"); showObject(block[8]); stb8 = true; }
+	}
+	else if (Object == block[6]) {
+		if (stb6) { hideObject(block[6]); setObjectImage(block[6], "Images1/blockp4.jpg"); showObject(block[6]); stb6 = false; }
+		else { hideObject(block[6]); setObjectImage(block[6], "Images1/blockg2.png"); showObject(block[6]); stb6 = true; }
+		if (stb3) { hideObject(block[3]); setObjectImage(block[3], "Images1/blockp4.jpg"); showObject(block[3]); stb3= false; }
+		else { hideObject(block[3]); setObjectImage(block[3], "Images1/blockg2.png"); showObject(block[3]); stb3 = true; }
+		if (stb7) { hideObject(block[7]); setObjectImage(block[7], "Images1/blockp4.jpg"); showObject(block[7]); stb7 = false; }
+		else { hideObject(block[7]); setObjectImage(block[7], "Images1/blockg2.png"); showObject(block[7]); stb7 = true; }
+	}
+	else if (Object == block[7]) {
+		if (stb7) { hideObject(block[7]); setObjectImage(block[7], "Images1/blockp4.jpg"); showObject(block[7]); stb7 = false; }
+		else { hideObject(block[7]); setObjectImage(block[7], "Images1/blockg2.png"); showObject(block[7]); stb7 = true; }
+		if (stb4) { hideObject(block[4]); setObjectImage(block[4], "Images1/blockp4.jpg"); showObject(block[4]); stb4 = false; }
+		else { hideObject(block[4]); setObjectImage(block[4], "Images1/blockg2.png"); showObject(block[4]); stb4 = true; }
+		if (stb6) { hideObject(block[6]); setObjectImage(block[6], "Images1/blockp4.jpg"); showObject(block[6]); stb6 = false; }
+		else { hideObject(block[6]); setObjectImage(block[6], "Images1/blockg2.png"); showObject(block[6]); stb6 = true; }
+		if (stb8) { hideObject(block[8]); setObjectImage(block[8], "Images1/blockp4.jpg"); showObject(block[8]); stb8 = false; }
+		else { hideObject(block[8]); setObjectImage(block[8], "Images1/blockg2.png"); showObject(block[8]); stb8 = true; }
+	}
+	else if (Object == block[8]) {
+		if (stb8) { hideObject(block[8]); setObjectImage(block[8], "Images1/blockp4.jpg"); showObject(block[8]); stb8 = false; }
+		else { hideObject(block[8]); setObjectImage(block[8], "Images1/blockg2.png"); showObject(block[8]); stb8 = true; }
+		if (stb5) { hideObject(block[5]); setObjectImage(block[5], "Images1/blockp4.jpg"); showObject(block[5]); stb5 = false; }
+		else { hideObject(block[5]); setObjectImage(block[5], "Images1/blockg2.png"); showObject(block[5]); stb5 = true; }
+		if (stb7) { hideObject(block[7]); setObjectImage(block[7], "Images1/blockp4.jpg"); showObject(block[7]); stb7 = false; }
+		else { hideObject(block[7]); setObjectImage(block[7], "Images1/blockg2.png"); showObject(block[7]); stb7 = true; }
+	}
+	else if (Object == checkNPC1) {
+	if (stb0 && stb1 && stb2 && stb3 && stb4 && stb5 && stb6 && stb7 && stb8) {
+		showObject(mover7);
+		showMessage("전부 녹색으로 맞췄다!\n화살표를 눌러 원래 있던 곳으로 돌아가자.");
+		}
+	}
 	else if (Object == mover7) {
+	enterScene(field5); hideObject(pt3); Key++;
+}
+	else if (Object == mover8) {
 		enterScene(maze[0]);
 		PlaySound(TEXT("walksound.wav"), NULL, SND_ASYNC);
 	} 
@@ -248,7 +349,7 @@ void keyboardCallback(KeyCode code, KeyState state) { //키보드 입력에 따라 오브�
 					}
 				else if (G1X == bkX12 + 60 && G1Y == bkY7) {
 					G1X -= 60; locateObject(NPC2, gameroom1, G1X, G1Y);
-					showObject(mover6); showMessage("성공!!"); ptshown1 = false;
+					showObject(mover6); showMessage("도착!\n화살표를 눌러 원래 있던 곳으로 돌아가자."); ptshown1 = false;
 				}
 				else {
 					G1X = G1X - 60;
@@ -389,7 +490,7 @@ void keyboardCallback(KeyCode code, KeyState state) { //키보드 입력에 따라 오브�
 			else if (collidedUp()) {
 				if (G1X == bkX12 && G1Y == bkY6) {
 					locateObject(NPC2, gameroom1, G1X, G1Y);
-					showMessage("보이지 않는 벽에 의해 앞으로 진행할 수 없다!\n 아까 지나쳐온 곳이 흔들리는 소리가 난다. 다시 되돌아 가보자.");
+					showMessage("보이지 않는 벽에 의해 앞으로 진행할 수 없다!\n 아까 지나쳐온 곳에서 흔들리는 소리가 난다. 다시 되돌아 가보자.");
 					showObject(notion);
 					hide = true;
 				}
@@ -449,8 +550,8 @@ int main()
     mover3 = createObject("Images1/goto_right.png", field3, 1040, 130);
 	scaleObject(mover3, 1.5f);
 
-	mover7 = createObject("Images1/goto_maze.png", field3, 530, 370);
-	scaleObject(mover7, 1.5f);
+	mover8 = createObject("Images1/goto_maze.png", field3, 530, 370);
+	scaleObject(mover8, 1.2f);
 	//필드3 끝
 	//필드4 설정시작(메인 왼쪽방)
 	field4 = createScene("필드4", "Images1/Back4.jpg");
@@ -462,15 +563,10 @@ int main()
 	pt2 = createObject("Images1/portal2.png", field4, 570, 270);
 	scaleObject(pt2, 0.7f);
 	//필드4 끝
-    //필드5 설정시작(메인 오른쪽방)
-	field5 = createScene("필드5", "Images1/Back5.webp");
-
-	mover5 = createObject("Images1/goto_left.png", field5, 130, 160);
-	scaleObject(mover5, 1.5f);
-    //게임룸1 설정시작
+	//게임룸1 설정시작
 	gameroom1 = createScene("게임룸1", "Images1/Back9_1.webp");
 
-	bk[0] = createObject("Images1/black.jpg", gameroom1, bkX1 ,bkY1);
+	bk[0] = createObject("Images1/black.jpg", gameroom1, bkX1, bkY1);
 	bk[1] = createObject("Images1/black.jpg", gameroom1, bkX2, bkY1);
 	bk[2] = createObject("Images1/black.jpg", gameroom1, bkX3, bkY1);
 	bk[3] = createObject("Images1/black.jpg", gameroom1, bkX7, bkY1);
@@ -492,7 +588,7 @@ int main()
 	bk[19] = createObject("Images1/black.jpg", gameroom1, bkX9, bkY7);
 	bk[20] = createObject("Images1/black.jpg", gameroom1, bkX10, bkY7);
 	bk[21] = createObject("Images1/black.jpg", gameroom1, bkX11, bkY7); //방향키 눌러도 막히게 되는 장애물 블록 설정
-	
+
 	mover6 = createObject("Images1/goto_right.png", gameroom1, 1000, 160, false);
 	scaleObject(mover6, 1.5f);
 
@@ -504,7 +600,31 @@ int main()
 
 	NPC2 = createObject("Images1/npc_3.png", gameroom1, G1X, G1Y);
 	//게임룸1 설정끝
-	 
+    //필드5 설정시작(메인 오른쪽방)
+	field5 = createScene("필드5", "Images1/Back5.webp");
+
+	mover5 = createObject("Images1/goto_left.png", field5, 130, 160);
+	scaleObject(mover5, 1.5f);
+
+	pt3 = createObject("Images1/portal2.png", field5, 870, 300);
+	scaleObject(pt3, 0.7f);
+    //필드5 설정끝
+	//게임룸2 설정 시작
+	gameroom2 = createScene("게임룸2");
+
+	block[0] = createObject("Images1/blockg2.png", gameroom2, bX0, bY0);
+	block[1] = createObject("Images1/blockp4.jpg", gameroom2, bX1, bY0);
+	block[2] = createObject("Images1/blockg2.png", gameroom2, bX2, bY0);
+	block[3] = createObject("Images1/blockp4.jpg", gameroom2, bX0, bY1); 
+	block[4] = createObject("Images1/blockg2.png", gameroom2, bX1, bY1); 
+	block[5] = createObject("Images1/blockp4.jpg", gameroom2, bX2, bY1);
+	block[6] = createObject("Images1/blockg2.png", gameroom2, bX0, bY2);
+	block[7] = createObject("Images1/blockp4.jpg", gameroom2, bX1, bY2);
+	block[8] = createObject("Images1/blockg2.png", gameroom2, bX2, bY2);
+
+	mover7 = createObject("Images1/goto_right.png", gameroom2, 400, 100, false);
+	checkNPC1 = createObject("Images1/goto_right.png", gameroom2, 1000, 100);
+	
 	//미로 설정 시작(게임룸1, 2에서 게임을 클리어한 후 메인룸에서 가운데 화살표를 누르면 미로 들어감
 	//미로의 장면 설정, 이동 방향버튼 생성
 	maze[0] = createScene("미로", "Images1/Back7_1(2).jpg");
