@@ -9,10 +9,10 @@
 #pragma comment(lib,"winmm.lib")
 #include "dream.h"
 
-SceneID field1, field2, field3, field4, field5, gameroom1, gameroom2, maze[7];
+SceneID field1, field2, field3, field4, field5, field6, gameroom1, gameroom2, maze[7];
 
-ObjectID NPC1, NPC2, checkNPC1; //상호작용을 위한 캐릭터 오브젝트
-ObjectID mover1, mover2, mover3, mover4, mover5, mover6, mover7, mover8, mazemover[24], pt1, pt2, pt3; //이동 관련 오브젝트
+ObjectID NPC1, NPC2, NPC3, checkNPC1; //상호작용을 위한 캐릭터 오브젝트
+ObjectID mover1, mover2, mover3, mover4, mover5, mover6, mover7, mover8, mazemover[24], pt1, pt2, pt3, entrance1; //이동 관련 오브젝트
 ObjectID bk[22], notion, hiddenroad[4], block[9];
 char buf[50];
 
@@ -20,7 +20,7 @@ int bkX1 = 296, bkX2 = 356, bkX3 = 416, bkX4 = 476, bkX5 = 536, bkX6 = 596, bkX7
 bkY1 = 400, bkY2 = 460, bkY3 = 520, bkY4 = 580, bkY5 = 640, bkY6 = 700, bkY7 = 760, bkY8 = 820,
 G1X = 356, G1Y = 460; //게임1 내의 xy좌표
 bool hide = false; //게임1 진행시 불타입
-int bX0 = 200, bX1 = 350, bX2 = 500, bY0 = 100, bY1 = 250, bY2 = 400;	
+int bX0 = 180, bX1 = 330, bX2 = 480, bY0 = 260, bY1 = 410, bY2 = 560; //게임2 진행시 블록의 좌표
 bool stb0 = true, stb1 = false, stb2 = true, stb3 = false, stb4 = true, stb5 = false, stb6 = true, stb7 = false, stb8 = true; //게임2 진행시 블록의 불타입
 bool ptshown1 = true, ptshown2 = true;//룸4,5에서 포탈 보이기 불타입
 int Key = 0; //Key변수가 2가 되면 메인룸에 미로로 가는 입구 생성
@@ -141,7 +141,7 @@ void MouseCallback1(ObjectID Object, int x, int y, MouseAction action) {
 	}
 	else if (Object == pt1) {
 		enterScene(field3);
-		showMessage("꿈에서 빠져나오고 싶어?\n모든 거울에 들어가보는게 어때?\n왼쪽 오른쪽 방의 거울은 마우스클릭으로 들어갈 수 있어");
+		showMessage("꿈에서 빠져나오고 싶은가?\n각 방의 모든 거울에 들어가보자.\n왼쪽, 오른쪽 방의 거울은 마우스클릭으로 들어갈 수 있다.");
 	}
 	else if (Object == mover2) {
 		enterScene(field4);
@@ -160,6 +160,10 @@ void MouseCallback1(ObjectID Object, int x, int y, MouseAction action) {
 	}
 	else if (Object == mover6) {
 		enterScene(field4); hideObject(pt2); Key++;
+		if (Key == 2) {
+			showMessage("처음 들어왔던 곳에서 흔들리는 소리가 난다!\n 되돌아 가보자.");
+			showObject(mover8);
+		}
 	}
 	else if (Object == pt2) {
 		enterScene(gameroom1);
@@ -250,52 +254,58 @@ void MouseCallback1(ObjectID Object, int x, int y, MouseAction action) {
 		if (stb5) { hideObject(block[5]); setObjectImage(block[5], "Images1/blockp4.jpg"); showObject(block[5]); stb5 = false; }
 		else { hideObject(block[5]); setObjectImage(block[5], "Images1/blockg2.png"); showObject(block[5]); stb5 = true; }
 		if (stb7) { hideObject(block[7]); setObjectImage(block[7], "Images1/blockp4.jpg"); showObject(block[7]); stb7 = false; }
-		else { hideObject(block[7]); setObjectImage(block[7], "Images1/blockg2.png"); showObject(block[7]); stb7 = true; }
+		else { hideObject(block[7]); setObjectImage(block[7], "Images1/blockg2.png"); showObject(block[7]); stb7 = true; } //게임룸1 마우스콜백 끝
 	}
-	else if (Object == checkNPC1) {
-	if (stb0 && stb1 && stb2 && stb3 && stb4 && stb5 && stb6 && stb7 && stb8) {
-		showObject(mover7);
-		showMessage("전부 녹색으로 맞췄다!\n화살표를 눌러 원래 있던 곳으로 돌아가자.");
+	else if (Object == checkNPC1) { //여기서부터 게임룸2 마우스 콜백
+		if (stb0 && stb1 && stb2 && stb3 && stb4 && stb5 && stb6 && stb7 && stb8) {
+			showObject(mover7);
+			showMessage("전부 녹색으로 맞췄다!\n화살표를 눌러 원래 있던 곳으로 돌아가자.");
 		}
-	}
+		else {
+			showMessage("전부 녹색이 아니다!\n천천히 다시 해보자");
+		}
+	} 
 	else if (Object == mover7) {
 	enterScene(field5); hideObject(pt3); Key++;
-}
+	if (Key == 2) {
+		showMessage("처음 들어왔던 곳에서 흔들리는 소리가 난다!\n 되돌아 가보자.");
+		showObject(mover8);
+	}
+}   // 게임룸2 마우스 콜백 끝
 	else if (Object == mover8) {
+	PlaySound(TEXT("bgm2.wav"), NULL, SND_ASYNC | SND_LOOP);
 		enterScene(maze[0]);
-		PlaySound(TEXT("walksound.wav"), NULL, SND_ASYNC);
+		showMessage("지나온곳이 무너져 돌아갈수 없다!\n어서 이곳을 탈출하자");
 	} 
 	// 미로 게임 마우스 콜백 설정, 4k = 왼쪽(서쪽), 4k + 1 = 아래(남쪽), 4k + 2 = 오른쪽(동쪽), 4k + 3 = 위쪽(북쪽), 해답은 WSNNES(서남북북동남)
 	else if (Object == mazemover[0]) {
 		enterScene(maze[1]);
-		PlaySound(TEXT("walksound.wav"), NULL, SND_ASYNC);
 	}
 	else if (Object == mazemover[5]) {
 		enterScene(maze[2]);
-		PlaySound(TEXT("walksound.wav"), NULL, SND_ASYNC);
 	}
 	else if (Object == mazemover[11]) {
 		enterScene(maze[3]);
-		PlaySound(TEXT("walksound.wav"), NULL, SND_ASYNC);
 	}
 	else if (Object == mazemover[15]) {
 		enterScene(maze[4]);
-		PlaySound(TEXT("walksound.wav"), NULL, SND_ASYNC);
 	}
 	else if (Object == mazemover[18]) {
 		enterScene(maze[5]);
-		PlaySound(TEXT("walksound.wav"), NULL, SND_ASYNC);
 	}
 	else if (Object == mazemover[21]) {
 		enterScene(maze[6]);
-		PlaySound(TEXT("walksound.wav"), NULL, SND_ASYNC);
 	}
 	else if (Object == mazemover[1] || Object == mazemover[2] || Object == mazemover[3] || Object == mazemover[4] || Object == mazemover[6] || Object == mazemover[7] 
 		  || Object == mazemover[8] || Object == mazemover[9] || Object == mazemover[10] || Object == mazemover[12] || Object == mazemover[13] || Object == mazemover[14]
 		  || Object == mazemover[16] || Object == mazemover[17] || Object == mazemover[19] || Object == mazemover[20] || Object == mazemover[22] || Object == mazemover[23]) {
 		enterScene(maze[0]); //힌트에 적힌 이동 순서를 지키지 않을 때, 미로의 첫번째 방으로 다시 돌아오게 함, 이동버튼 클릭 시마다 이동소리 bgm 재생
-		PlaySound(TEXT("walksound.wav"), NULL, SND_ASYNC);
-	}
+	}//미로 마우스 콜백끝
+	//필드 6 마우스 콜백
+	else if (Object == entrance1) {
+		enterScene(field6);
+		showMessage("영원히 꿈속에 가두려 했는데...\n끈질기구나");
+}
 }
 
 void keyboardCallback(KeyCode code, KeyState state) { //키보드 입력에 따라 오브젝트 위치 설정. gameroom1과 gameroom3에서 사용.
@@ -550,7 +560,7 @@ int main()
     mover3 = createObject("Images1/goto_right.png", field3, 1040, 130);
 	scaleObject(mover3, 1.5f);
 
-	mover8 = createObject("Images1/goto_maze.png", field3, 530, 370);
+	mover8 = createObject("Images1/goto_maze.png", field3, 530, 370, false);
 	scaleObject(mover8, 1.2f);
 	//필드3 끝
 	//필드4 설정시작(메인 왼쪽방)
@@ -564,7 +574,7 @@ int main()
 	scaleObject(pt2, 0.7f);
 	//필드4 끝
 	//게임룸1 설정시작
-	gameroom1 = createScene("게임룸1", "Images1/Back9_1.webp");
+	gameroom1 = createScene("게임룸1", "Images1/Back9_4.webp");
 
 	bk[0] = createObject("Images1/black.jpg", gameroom1, bkX1, bkY1);
 	bk[1] = createObject("Images1/black.jpg", gameroom1, bkX2, bkY1);
@@ -589,7 +599,7 @@ int main()
 	bk[20] = createObject("Images1/black.jpg", gameroom1, bkX10, bkY7);
 	bk[21] = createObject("Images1/black.jpg", gameroom1, bkX11, bkY7); //방향키 눌러도 막히게 되는 장애물 블록 설정
 
-	mover6 = createObject("Images1/goto_right.png", gameroom1, 1000, 160, false);
+	mover6 = createObject("Images1/goto_left.png", gameroom1, 100, 160, false);
 	scaleObject(mover6, 1.5f);
 
 	notion = createObject("Images1/notion.png", gameroom1, bkX5, bkY1, false);
@@ -610,7 +620,7 @@ int main()
 	scaleObject(pt3, 0.7f);
     //필드5 설정끝
 	//게임룸2 설정 시작
-	gameroom2 = createScene("게임룸2");
+	gameroom2 = createScene("게임룸2", "Images1/Back6_4.jpg");
 
 	block[0] = createObject("Images1/blockg2.png", gameroom2, bX0, bY0);
 	block[1] = createObject("Images1/blockp4.jpg", gameroom2, bX1, bY0);
@@ -622,12 +632,12 @@ int main()
 	block[7] = createObject("Images1/blockp4.jpg", gameroom2, bX1, bY2);
 	block[8] = createObject("Images1/blockg2.png", gameroom2, bX2, bY2);
 
-	mover7 = createObject("Images1/goto_right.png", gameroom2, 400, 100, false);
-	checkNPC1 = createObject("Images1/goto_right.png", gameroom2, 1000, 100);
+	mover7 = createObject("Images1/goto_right.png", gameroom2, 1050, 300, false);
+	checkNPC1 = createObject("Images1/statue.png", gameroom2, 700, 200);
 	
 	//미로 설정 시작(게임룸1, 2에서 게임을 클리어한 후 메인룸에서 가운데 화살표를 누르면 미로 들어감
 	//미로의 장면 설정, 이동 방향버튼 생성
-	maze[0] = createScene("미로", "Images1/Back7_1(2).jpg");
+	maze[0] = createScene("미로", "Images1/Back7_0.jpg");
 	maze[1] = createScene("미로", "Images1/Back7_2.jpg");
 	maze[2] = createScene("미로", "Images1/Back7_3.jpg");
 	maze[3] = createScene("미로", "Images1/Back7_4.jpg");
@@ -642,7 +652,11 @@ int main()
 		mazemover[4 * i + 3] = createObject("Images1/maze_up.png", maze[i], mazemoveX2, mazemoveY3);
 	}
 	
-	
-	
+	entrance1 = createObject("Images1/entrance.png", maze[6], 500, 120); 
+	//미로 설정 끝
+	//필드 6 설정 시작
+	field6 = createScene("필드6", "Images1/Back10.webp");
+
+	NPC3 = createObject("Images1/npc_4-1.png", field6, 700, - 100);
     startGame(field1);
 }
