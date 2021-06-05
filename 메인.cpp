@@ -7,14 +7,14 @@
 #include <conio.h>
 #include <mmsystem.h>
 #pragma comment(lib,"winmm.lib")
-#include "dream.h"
 
-SceneID field1, field2, field3, field4, field5, field6, gameroom1, gameroom2, maze[7];
 
-ObjectID NPC1, NPC2, NPC3, checkNPC1; //상호작용을 위한 캐릭터 오브젝트
-ObjectID mover1, mover2, mover3, mover4, mover5, mover6, mover7, mover8, mazemover[24], pt1, pt2, pt3, entrance1; //이동 관련 오브젝트
-ObjectID bk[22], notion, hiddenroad[4], block[9];
-char buf[50];
+SceneID field1, field2, field3, field4, field5, field6, field7, field8, field9, gameroom1, gameroom2, maze[7];
+
+ObjectID NPC1, NPC2, NPC3, checkNPC1, NPC4; //상호작용을 위한 캐릭터 오브젝트
+ObjectID mover1, mover2, mover3, mover4, mover5, mover6, mover7, mover8, mazemover[24], pt1, pt2, pt3, entrance1, mover9; //이동 관련 오브젝트
+ObjectID bk[22], notion, hiddenroad[4], block[9], compass1, compass2, compass3, compass4, compass5, compass6, dialog1, dialog2;
+ObjectID player, flower[50], portal1, portal2, portal3, portal4, portal5, start, restart, door, endbutton;//마지막 게임 오브젝트
 
 int bkX1 = 296, bkX2 = 356, bkX3 = 416, bkX4 = 476, bkX5 = 536, bkX6 = 596, bkX7 = 656, bkX8 = 716, bkX9 = 776, bkX10 = 836, bkX11 = 896, bkX12 = 956,
 bkY1 = 400, bkY2 = 460, bkY3 = 520, bkY4 = 580, bkY5 = 640, bkY6 = 700, bkY7 = 760, bkY8 = 820,
@@ -25,6 +25,14 @@ bool stb0 = true, stb1 = false, stb2 = true, stb3 = false, stb4 = true, stb5 = f
 bool ptshown1 = true, ptshown2 = true;//룸4,5에서 포탈 보이기 불타입
 int Key = 0; //Key변수가 2가 되면 메인룸에 미로로 가는 입구 생성
 int mazemoveX1 = 80, mazemoveX2 = 520, mazemoveX3 = 970, mazemoveY1 = 160, mazemoveY2 = 40, mazemoveY3 = 250; //미로 내의 이동버튼의 xy좌표
+//마지막 게임 자료형
+int flowerX[50], flowerY[50], i, playerspeed = 0;
+int player2X = 600, player2Y = 78; // x, y는 플레이어의 좌표
+int flowerspeed = 2; //꽃의 떨어지는 속도
+unsigned int count = 10, life = 5; // 1분 30초동안 목숨은 5개!
+bool timerstate = false, bgmstate = false, lifestate = true;
+TimerID timer1, timer2;
+
 
 ObjectID createObject(const char* Image, SceneID Scene, int x, int y, bool shown = true) {
 	ObjectID Object = createObject(Image);
@@ -125,7 +133,68 @@ bool collidedLeft() {     //gameroom1에서 오른쪽 -> 왼쪽 충돌 판단 함수!!
 
 // wasd 이동버튼 충돌 판정
 
+//마지막 게임 함수들
+void gamesettings() {
+	timer2 = createTimer(15.f);
+	startTimer(timer2);
+	showTimer(timer2);
+}
 
+
+void createFlower() { //떨어지는 장애물 생성
+	char buf[100];
+	for (int i = 0; i < 50; i++) {
+		sprintf(buf, "Images1/flower%d.png", i % 2 + 1);
+		flower[i] = createObject(buf);
+		flowerX[i] = rand() % 1280;
+		flowerY[i] = (rand() % 100) * i + 853;
+		flower[i] = createObject(buf, field7, flowerX[i], flowerY[i]);
+	}
+}
+bool pointinFlower(int x, int y, int fx, int fy) { //꽃과 플레이어가 닿았는지 판정 함수
+	return ((x >= fx) && (x <= fx + 100) && (y >= fy) && (y <= fy + 96));
+}
+
+bool collidedFlower(int x, int y, int fx, int fy) {
+	for (int i = 0; i < 50; i++) {
+
+		if (pointinFlower(x, y + 20, fx, fy)) {
+			return true;
+		}
+		if (pointinFlower(x + 62, y + 20, fx, fy)) {
+			return true;
+		}
+		if (pointinFlower(x + 31, y + 90, fx, fy)) {
+			return true;
+		}
+
+	}
+	return false;
+
+}
+
+bool checkFlowercollision() { //충돌시 상호작용
+	for (int i = 0; i < 50; i++) {
+		if (collidedFlower(player2X, player2Y, flowerX[i], flowerY[i])) {
+			while (flower[i]) {
+				if (count == 0) {
+					count = 10; life -= 1; break;
+				}
+
+				else count--;
+			}
+
+			hideObject(flower[i]);
+			flower[i] = false;
+			locateObject(flower[i], field7, 500, 900); showObject(flower[i]);
+
+			return true;
+		}
+
+
+	}
+	return false;
+}
 
 
 void MouseCallback1(ObjectID Object, int x, int y, MouseAction action) {
@@ -281,31 +350,76 @@ void MouseCallback1(ObjectID Object, int x, int y, MouseAction action) {
 	else if (Object == mazemover[0]) {
 		enterScene(maze[1]);
 	}
-	else if (Object == mazemover[5]) {
+	else if (Object == mazemover[4]) {
 		enterScene(maze[2]);
 	}
-	else if (Object == mazemover[11]) {
+	else if (Object == mazemover[8]) {
 		enterScene(maze[3]);
 	}
-	else if (Object == mazemover[15]) {
+	else if (Object == mazemover[13]) {
 		enterScene(maze[4]);
 	}
-	else if (Object == mazemover[18]) {
+	else if (Object == mazemover[19]) {
 		enterScene(maze[5]);
 	}
-	else if (Object == mazemover[21]) {
+	else if (Object == mazemover[23]) {
 		enterScene(maze[6]);
 	}
-	else if (Object == mazemover[1] || Object == mazemover[2] || Object == mazemover[3] || Object == mazemover[4] || Object == mazemover[6] || Object == mazemover[7] 
-		  || Object == mazemover[8] || Object == mazemover[9] || Object == mazemover[10] || Object == mazemover[12] || Object == mazemover[13] || Object == mazemover[14]
-		  || Object == mazemover[16] || Object == mazemover[17] || Object == mazemover[19] || Object == mazemover[20] || Object == mazemover[22] || Object == mazemover[23]) {
-		enterScene(maze[0]); //힌트에 적힌 이동 순서를 지키지 않을 때, 미로의 첫번째 방으로 다시 돌아오게 함, 이동버튼 클릭 시마다 이동소리 bgm 재생
+	else if (Object == mazemover[1] || Object == mazemover[2] || Object == mazemover[3] || Object == mazemover[5] || Object == mazemover[6] || Object == mazemover[7] 
+		  || Object == mazemover[9] || Object == mazemover[10] || Object == mazemover[11] || Object == mazemover[12] || Object == mazemover[15] || Object == mazemover[14]
+		  || Object == mazemover[16] || Object == mazemover[17] || Object == mazemover[18] || Object == mazemover[20] || Object == mazemover[21] || Object == mazemover[22]) {
+		enterScene(maze[0]); //힌트에 적힌 이동 순서를 지키지 않을 때, 미로의 첫번째 방으로 다시 돌아오게 함
 	}//미로 마우스 콜백끝
 	//필드 6 마우스 콜백
 	else if (Object == entrance1) {
 		enterScene(field6);
-		showMessage("영원히 꿈속에 가두려 했는데...\n끈질기구나");
-}
+		showMessage("영원히 꿈속에 가두려 했는데. . .\n여기까지 왔구나");
+	}
+	else if (Object == mover9 || Object == NPC3) {
+	showMessage("이번에도 통과할 수 있을까??");
+	showObject(start); hideObject(mover9); //NPC3나 mover9을 누르면, 게임3 start버튼 생성, 게임 설명 보이게 하기
+	showObject(dialog1); showObject(dialog2); showObject(door);
+	}
+	else if (Object == start) {
+		timerstate = true;
+		startTimer(timer1);
+		hideObject(start);
+		gamesettings();
+	}
+	else if (Object == door) {
+		if (!bgmstate) {
+			PlaySound(TEXT("bgm3.wav"), NULL, SND_ASYNC | SND_LOOP);
+		}
+		hideObject(restart);
+		life = 5;
+		enterScene(field7);
+		player2X = 600, player2Y = 78;
+		locateObject(player, field7, player2X, player2Y); playerspeed = 0;
+		createFlower();
+		bgmstate = true;
+	}
+	else if (Object == restart) {
+		showObject(start);
+		stopTimer(timer2); hideTimer();
+		for (int i = 0; i < 50; i++) {
+			locateObject(flower[i], field7, rand() % 1280, (rand() % 100) * i + 853);
+		}
+		enterScene(field6);
+		for (int i = 0; i < 50; i++) {
+			flowerY[i] = (rand() % 100) * i + 1000;
+
+
+		}
+
+	}
+	else if (Object == portal5) {
+		enterScene(field9);
+		showMessage("SUCH A BAD DREAM . . .");
+		PlaySound(TEXT("bgm4.wav"), NULL, SND_ASYNC | SND_LOOP);
+	}
+	else if (Object == endbutton) {
+		endGame();
+	}
 }
 
 void keyboardCallback(KeyCode code, KeyState state) { //키보드 입력에 따라 오브젝트 위치 설정. gameroom1과 gameroom3에서 사용.
@@ -355,8 +469,8 @@ void keyboardCallback(KeyCode code, KeyState state) { //키보드 입력에 따라 오브�
 						}
 					}
 					else G1X = G1X - 60;
-						locateObject(NPC2, gameroom1, G1X, G1Y);
-					}
+					locateObject(NPC2, gameroom1, G1X, G1Y);
+				}
 				else if (G1X == bkX12 + 60 && G1Y == bkY7) {
 					G1X -= 60; locateObject(NPC2, gameroom1, G1X, G1Y);
 					showObject(mover6); showMessage("도착!\n화살표를 눌러 원래 있던 곳으로 돌아가자."); ptshown1 = false;
@@ -365,7 +479,7 @@ void keyboardCallback(KeyCode code, KeyState state) { //키보드 입력에 따라 오브�
 					G1X = G1X - 60;
 					locateObject(NPC2, gameroom1, G1X, G1Y);
 				}
-				
+
 			}  // gameroom1에서 a입력->화살표 마주치면 진행방향 이동, 아니라면 오브젝트 x위치 -
 		}
 		else if (code == KeyCode::KEY_D) {
@@ -513,9 +627,80 @@ void keyboardCallback(KeyCode code, KeyState state) { //키보드 입력에 따라 오브�
 			}
 			//gameroom1에서 w입력 -> 화살표 마주치면 진행방향으로 이동, 아니라면 오브젝트 y위치 +
 		}
+
+		else if (code == KeyCode::KEY_RIGHT_ARROW)  playerspeed++;
+		else if (code == KeyCode::KEY_LEFT_ARROW)  playerspeed--; //플레이어의 속도 관련
+
+
+		else if (state == KeyState::KEY_PRESSED && player2X < 260 && player2X > 170 && player2Y == 78) {
+			if (code == KeyCode::KEY_UP_ARROW) player2Y += 220, player2X = 970; //좌측 하단 빨간문에 위방향키 -> 우측 상단 빨간문으로 플레이어 이동
+
+		}
+		else if (state == KeyState::KEY_PRESSED && player2X < 260 && player2X > 170 && player2Y == 298) {
+			if (code == KeyCode::KEY_DOWN_ARROW) player2Y -= 220, player2X = 970; // 좌측 상단 파란문에 아래방향키 -> 우측 하단 파란문으로 플레이어 이동
+		}
+
+		else if (state == KeyState::KEY_PRESSED && player2X < 1010 && player2X > 920 && player2Y == 78) {
+			if (code == KeyCode::KEY_UP_ARROW) player2Y += 220, player2X = 220; // 우측 하단 파란문에 위방향키 -> 좌측 상단 파란문으로 플레이어 이동
+		}
+		else if (state == KeyState::KEY_PRESSED && player2X < 1010 && player2X > 920 && player2Y == 298) {
+			if (code == KeyCode::KEY_DOWN_ARROW) player2Y -= 220, player2X = 220; // 우측 상단 빨간문에 아래방향키 -> 좌측 하단 빨간문으로 이동
+		}
 	}
 }
-			
+
+
+//타이머 콜백함수. 루프
+void timerCallback(TimerID timer) {
+	//기본적인 오브젝트 움직임 루프 타이머 
+	if (timer == timer1) {
+		player2X += playerspeed;
+		if (player2X < 0) player2X = 0;
+		if (player2X > 1220) player2X = 1220;
+		locateObject(player, field7, player2X, player2Y);
+
+		for (int i = 0; i < 50; i++) {
+			locateObject(player, field7, player2X, player2Y);
+			if (flower[i]) {
+				flowerY[i] -= flowerspeed;
+				locateObject(flower[i], field7, flowerX[i], flowerY[i]);
+			}
+
+
+			if (flowerY[i] < 0) {
+				flowerX[i] = rand() % 1280;
+				flowerY[i] = (rand() % 100) * i + 853;
+				locateObject(flower[i], field7, flowerX[i], flowerY[i]);
+
+
+			}
+
+		}
+
+	}
+	checkFlowercollision();
+
+	if (lifestate) {
+		if (life == 0) {
+			timerstate = false;
+			showMessage("실패 . . .");
+			showObject(restart);
+		}
+	}
+
+	if (timerstate) {
+		setTimer(timer1, 0.01f);
+		startTimer(timer1);
+	}
+	//게임 진행중 일정 시간 지났을 때 상호작용 타이머
+	if (timer == timer2) {
+		enterScene(field8);
+		stopTimer(timer1); hideTimer(); lifestate = false;
+		showMessage("성공 !!\n어서 거울을 클릭해 이곳에서 탈출하자!");
+	}
+
+}
+
 
 
 
@@ -528,8 +713,9 @@ int main()
 
 	setMouseCallback(MouseCallback1);
 	setKeyboardCallback(keyboardCallback);
+	setTimerCallback(timerCallback);
 
-	
+	srand((unsigned int)time(NULL));
 	
 
 	// 필드1 설정시작
@@ -637,7 +823,7 @@ int main()
 	
 	//미로 설정 시작(게임룸1, 2에서 게임을 클리어한 후 메인룸에서 가운데 화살표를 누르면 미로 들어감
 	//미로의 장면 설정, 이동 방향버튼 생성
-	maze[0] = createScene("미로", "Images1/Back7_0.jpg");
+	maze[0] = createScene("미로", "Images1/Back7_1(1).jpg");
 	maze[1] = createScene("미로", "Images1/Back7_2.jpg");
 	maze[2] = createScene("미로", "Images1/Back7_3.jpg");
 	maze[3] = createScene("미로", "Images1/Back7_4.jpg");
@@ -651,12 +837,51 @@ int main()
 		mazemover[4 * i + 2] = createObject("Images1/goto_right.png", maze[i], mazemoveX3, mazemoveY1);
 		mazemover[4 * i + 3] = createObject("Images1/maze_up.png", maze[i], mazemoveX2, mazemoveY3);
 	}
-	
-	entrance1 = createObject("Images1/entrance.png", maze[6], 500, 120); 
+
+	compass1 = createObject("Images1/compass1.png", maze[0], 170, 400);
+	compass2 = createObject("Images1/compass2.png", maze[1], 170, 400);
+	compass3 = createObject("Images1/compass5.png", maze[2], 170, 400);
+	compass4 = createObject("Images1/compass3.png", maze[3], 170, 400);
+	compass5 = createObject("Images1/compass6.png", maze[4], 170, 400);
+	compass6 = createObject("Images1/compass7.png", maze[5], 170, 400);
+	entrance1 = createObject("Images1/entrance.png", maze[6], 550, 120); 
 	//미로 설정 끝
 	//필드 6 설정 시작
 	field6 = createScene("필드6", "Images1/Back10.webp");
+	NPC3 = createObject("Images1/npc_4.png", field6, 700, - 100);
+	mover9 = createObject("Images1/goto_maze.png", field6, 750, 300);
+	start = createObject("Images1/start.png", field6, 550, 300, false);
+	dialog1 = createObject("Images1/box3.png", field6, -50, 210, false);
+	dialog2 = createObject("Images1/box4.png", field6, -50, -72, false);
+	door = createObject("Images1/goto_maze.png", field6, 500, 300, false);
+	//필드6 설정끝
+	//필드7, 8 ,9 설정 시작
+	field7 = createScene("dreamescape", "Images1/back11.jpg");
+	
+	portal1 = createObject("Images1/portal4.png", field7, 200, 82); //좌측하단
+	scaleObject(portal1, 0.3f);
+	portal2 = createObject("Images1/portal6.png", field7, 950, 302); //우측상단
+	scaleObject(portal2, 0.3f);
+	portal3 = createObject("Images1/portal7.png", field7, 950, 82); //우측하단
+	scaleObject(portal3, 0.3f);
+	portal4 = createObject("Images1/portal5.png", field7, 200, 302); //좌측상단
+	scaleObject(portal4, 0.3f);
 
-	NPC3 = createObject("Images1/npc_4-1.png", field6, 700, - 100);
-    startGame(field1);
+	player = createObject("Images1/player2.png", field7, player2X, player2Y);
+
+	start = createObject("Images1/start.png", field7, 570, 500);
+
+	restart = createObject("Images1/restart.png", field7, 610, 400, false);
+
+	timer1 = createTimer(0.01f);
+
+	field8 = createScene("필드8", "Images1/Back11.jpg");
+
+	portal5 = createObject("Images1/portal2.png", field8, 500, 302);
+	scaleObject(portal5, 0.7f);
+
+	field9 = createScene("필드9", "Images1/Back12.jpg");
+
+	endbutton = createObject("Images1/end.png", field9, 1000, 400);
+    startGame(field8);
 }
