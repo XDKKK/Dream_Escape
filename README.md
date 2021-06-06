@@ -1,6 +1,10 @@
 # Dream_Escape
 
-## 간단한 게임소개
+## 간단한 게임소개 영상
+
+https://youtu.be/z4Z8cCupCUc           
+
+
 
 ## 플레이 이미지
    
