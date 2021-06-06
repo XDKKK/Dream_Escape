@@ -4,7 +4,8 @@ https://drive.google.com/drive/u/1/folders/1--e0WZ4IdZN02nnnozCrm5LEV6jUIdUg
 
 
 푸앙이거 깊은 잠에 들었습니다!  
-푸앙이가 꿈에서 빠져나올수 있게 도와주세요!
+푸앙이가 꿈에서 빠져나올수 있게 도와주세요!  
+총 3가지 게임을 진행합니다.
 
 ## 간단한 게임소개 영상
 
