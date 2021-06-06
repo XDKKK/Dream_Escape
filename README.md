@@ -1,5 +1,7 @@
 # Dream_Escape
 
+푸앙이가 꿈에서 빠져나올수 있게 도와주세요!
+
 ## 간단한 게임소개 영상
 
 https://youtu.be/z4Z8cCupCUc           
