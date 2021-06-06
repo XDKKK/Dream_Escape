@@ -137,6 +137,8 @@ bool collidedLeft() {     //gameroom1에서 오른쪽 -> 왼쪽 충돌 판단 함수!!
 	if (G1X == bkX1) return false;
 
 	return true;
+
+
 }
 
 // wasd 이동버튼 충돌 판정
