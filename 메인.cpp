@@ -11,10 +11,10 @@
 
 SceneID field1, field2, field3, field4, field5, field6, field7, field8, field9, gameroom1, gameroom2, maze[7];
 
-ObjectID NPC1, NPC2, NPC3, checkNPC1, NPC4; //상호작용을 위한 캐릭터 오브젝트
+ObjectID NPC1, NPC2, NPC3, checkNPC1, NPC4, NPC5, NPC6; //상호작용을 위한 캐릭터 오브젝트
 ObjectID mover1, mover2, mover3, mover4, mover5, mover6, mover7, mover8, mazemover[24], pt1, pt2, pt3, entrance1, mover9; //이동 관련 오브젝트
 ObjectID bk[22], notion, hiddenroad[4], block[9], compass1, compass2, compass3, compass4, compass5, compass6, dialog1, dialog2;
-ObjectID player, flower[50], portal1, portal2, portal3, portal4, portal5, start, restart, door, endbutton;//마지막 게임 오브젝트
+ObjectID player, flower[55], portal1, portal2, portal3, portal4, portal5, start, restart, door, endbutton;//마지막 게임 오브젝트
 
 int bkX1 = 296, bkX2 = 356, bkX3 = 416, bkX4 = 476, bkX5 = 536, bkX6 = 596, bkX7 = 656, bkX8 = 716, bkX9 = 776, bkX10 = 836, bkX11 = 896, bkX12 = 956,
 bkY1 = 400, bkY2 = 460, bkY3 = 520, bkY4 = 580, bkY5 = 640, bkY6 = 700, bkY7 = 760, bkY8 = 820,
@@ -26,7 +26,7 @@ bool ptshown1 = true, ptshown2 = true;//룸4,5에서 포탈 보이기 불타입
 int Key = 0; //Key변수가 2가 되면 메인룸에 미로로 가는 입구 생성
 int mazemoveX1 = 80, mazemoveX2 = 520, mazemoveX3 = 970, mazemoveY1 = 160, mazemoveY2 = 40, mazemoveY3 = 250; //미로 내의 이동버튼의 xy좌표
 //마지막 게임 자료형
-int flowerX[50], flowerY[50], i, playerspeed = 0;
+int flowerX[55], flowerY[55], i, playerspeed = 0;
 int player2X = 600, player2Y = 78; // x, y는 플레이어의 좌표
 int flowerspeed = 2; //꽃의 떨어지는 속도
 unsigned int count = 10, life = 5; // 1분 30초동안 목숨은 5개!
@@ -135,7 +135,7 @@ bool collidedLeft() {     //gameroom1에서 오른쪽 -> 왼쪽 충돌 판단 함수!!
 
 //마지막 게임 함수들
 void gamesettings() {
-	timer2 = createTimer(15.f);
+	timer2 = createTimer(90.f);
 	startTimer(timer2);
 	showTimer(timer2);
 }
@@ -143,7 +143,7 @@ void gamesettings() {
 
 void createFlower() { //떨어지는 장애물 생성
 	char buf[100];
-	for (int i = 0; i < 50; i++) {
+	for (int i = 0; i < 55; i++) {
 		sprintf(buf, "Images1/flower%d.png", i % 2 + 1);
 		flower[i] = createObject(buf);
 		flowerX[i] = rand() % 1280;
@@ -156,7 +156,7 @@ bool pointinFlower(int x, int y, int fx, int fy) { //꽃과 플레이어가 닿았는지 판
 }
 
 bool collidedFlower(int x, int y, int fx, int fy) {
-	for (int i = 0; i < 50; i++) {
+	for (int i = 0; i < 80; i++) {
 
 		if (pointinFlower(x, y + 20, fx, fy)) {
 			return true;
@@ -174,7 +174,7 @@ bool collidedFlower(int x, int y, int fx, int fy) {
 }
 
 bool checkFlowercollision() { //충돌시 상호작용
-	for (int i = 0; i < 50; i++) {
+	for (int i = 0; i < 55; i++) {
 		if (collidedFlower(player2X, player2Y, flowerX[i], flowerY[i])) {
 			while (flower[i]) {
 				if (count == 0) {
@@ -401,11 +401,11 @@ void MouseCallback1(ObjectID Object, int x, int y, MouseAction action) {
 	else if (Object == restart) {
 		showObject(start);
 		stopTimer(timer2); hideTimer();
-		for (int i = 0; i < 50; i++) {
+		for (int i = 0; i < 55; i++) {
 			locateObject(flower[i], field7, rand() % 1280, (rand() % 100) * i + 853);
 		}
 		enterScene(field6);
-		for (int i = 0; i < 50; i++) {
+		for (int i = 0; i < 55; i++) {
 			flowerY[i] = (rand() % 100) * i + 1000;
 
 
@@ -659,7 +659,7 @@ void timerCallback(TimerID timer) {
 		if (player2X > 1220) player2X = 1220;
 		locateObject(player, field7, player2X, player2Y);
 
-		for (int i = 0; i < 50; i++) {
+		for (int i = 0; i < 55; i++) {
 			locateObject(player, field7, player2X, player2Y);
 			if (flower[i]) {
 				flowerY[i] -= flowerspeed;
@@ -852,7 +852,7 @@ int main()
 	mover9 = createObject("Images1/goto_maze.png", field6, 750, 300);
 	start = createObject("Images1/start.png", field6, 550, 300, false);
 	dialog1 = createObject("Images1/box3.png", field6, -50, 210, false);
-	dialog2 = createObject("Images1/box4.png", field6, -50, -72, false);
+	dialog2 = createObject("Images1/box6.png", field6, -50, -72, false);
 	door = createObject("Images1/goto_maze.png", field6, 500, 300, false);
 	//필드6 설정끝
 	//필드7, 8 ,9 설정 시작
@@ -881,7 +881,7 @@ int main()
 	scaleObject(portal5, 0.7f);
 
 	field9 = createScene("필드9", "Images1/Back12.jpg");
-
+	NPC6 = createObject("Images1/player3.png", field9, 400, 150);
 	endbutton = createObject("Images1/end.png", field9, 1000, 400);
-    startGame(field8);
+    startGame(field1);
 }
