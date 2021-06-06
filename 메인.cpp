@@ -72,6 +72,8 @@ bool collidedDown() {  // gameroom1에서 위 -> 아래 충돌 판단 함수!!
 	if (G1X == bkX12 + 120 && G1Y == bkY7) return false;
 	if (G1X == bkX12 + 60 && G1Y == bkY7) return false;
 	if (G1X == bkX12 && G1Y == bkY7) return false;
+
+	return true;
 }
 
 bool collidedUp() {    //gameroom1에서 아래 -> 위 충돌 판단 함수!!
@@ -92,6 +94,8 @@ bool collidedUp() {    //gameroom1에서 아래 -> 위 충돌 판단 함수!!
 	if (G1X == bkX5 && G1Y == bkY1 - 180) return false;
 	if (G1Y == bkY7) return false;
 	if (G1X == bkX12 + 60 && G1Y == bkY7) return false;
+
+	return true;
 }
 
 bool collidedRight() {   //gameroom1에서 왼쪽 -> 오른쪽 충돌 판단 함수!!
@@ -110,6 +114,8 @@ bool collidedRight() {   //gameroom1에서 왼쪽 -> 오른쪽 충돌 판단 함수!!
 	if (G1X == bkX12 + 120 && G1Y == bkY1 - 180) return false;
 	if (G1X == bkX12) return false;
 	if (G1X == bkX12 + 120 && G1Y == bkY7) return false;
+
+	return true;
 }
 
 bool collidedLeft() {     //gameroom1에서 오른쪽 -> 왼쪽 충돌 판단 함수!!
@@ -129,6 +135,8 @@ bool collidedLeft() {     //gameroom1에서 오른쪽 -> 왼쪽 충돌 판단 함수!!
 	if (G1X == bkX5 && G1Y == bkY1 - 180) return false;
 	if (G1X == bkX12 + 120 && G1Y == bkY1 - 180) return false;
 	if (G1X == bkX1) return false;
+
+	return true;
 }
 
 // wasd 이동버튼 충돌 판정

@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Escape Dream", "Escape Dream.vcxproj", "{B944F86D-59EA-42B2-B1D2-E58CBD95E5FC}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Installer", "..\Setup1\Setup1.vdproj", "{3B365365-EFB8-4E35-BE1A-F5D70F6A81C2}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Installer", "..\Setup1.vdproj", "{3B365365-EFB8-4E35-BE1A-F5D70F6A81C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
