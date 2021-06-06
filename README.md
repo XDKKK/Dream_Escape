@@ -2,7 +2,7 @@
 기초컴퓨터그래밍 게임 프로젝트입니다!  
 C언어와 방탈라이브러리를 이용하여 만들었습니다.  
 (설치 프로젝트 링크입니다.. 용량 문제로 링크로 올려요!)  
-https://drive.google.com/drive/u/1/folders/1--e0WZ4IdZN02nnnozCrm5LEV6jUIdUg        
+https://drive.google.com/drive/folders/1Qz8GlzUPPr9l2JtbHDI34XYW0Cfwtrzw?usp=sharing       
 
 
 푸앙이거 깊은 잠에 들었습니다!  
