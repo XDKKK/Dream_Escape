@@ -27,7 +27,6 @@ Global
 		{3B365365-EFB8-4E35-BE1A-F5D70F6A81C2}.Debug|x86.ActiveCfg = Debug
 		{3B365365-EFB8-4E35-BE1A-F5D70F6A81C2}.Release|x64.ActiveCfg = Release
 		{3B365365-EFB8-4E35-BE1A-F5D70F6A81C2}.Release|x86.ActiveCfg = Release
-		{3B365365-EFB8-4E35-BE1A-F5D70F6A81C2}.Release|x86.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
