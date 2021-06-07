@@ -15,14 +15,16 @@ https://youtu.be/z4Z8cCupCUc
 
 
 
-## 플레이 이미지
+## 간단한 게임소개 
    
-![스크린샷(90)](https://user-images.githubusercontent.com/81098888/119979609-221b3300-bff6-11eb-9879-f104f230c371.png)
+
 
 
 ![스크린샷2](https://user-images.githubusercontent.com/81098888/119979071-678b3080-bff5-11eb-92ce-3a70902ad81b.png)
-
+# 게임 1: 키보드 wsad로 상하좌우로 이동할 수 있습니다. 목적인 별까지 도달하면 됩니다.
 
 ![스크린샷(85)](https://user-images.githubusercontent.com/81098888/119534272-af297680-bdc1-11eb-8779-c2c399a1add4.png)
 
-
+# 게임 3: 키보드 십자키로 이동할 수 있습니다.  
+# 좌우는 이동, 문앞에서 위 또는 아래 십자키로 문끼리 이동 할 수있습니다.  
+# 1분30초 동안 버티면 성공입니다
