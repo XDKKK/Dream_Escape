@@ -21,7 +21,7 @@ https://youtu.be/z4Z8cCupCUc
 
 
 ![스크린샷2](https://user-images.githubusercontent.com/81098888/119979071-678b3080-bff5-11eb-92ce-3a70902ad81b.png)
-# 게임 1: 키보드 wsad로 상하좌우로 이동할 수 있습니다. 목적인 별까지 도달하면 됩니다.
+# 게임 1: 키보드 wsad로 상하좌우로 이동할 수 있습니다. 목적지 별까지 도달하면 됩니다.
 
 ![스크린샷(85)](https://user-images.githubusercontent.com/81098888/119534272-af297680-bdc1-11eb-8779-c2c399a1add4.png)
 
