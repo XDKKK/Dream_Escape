@@ -1,7 +1,7 @@
 # Dream_Escape
 기초컴퓨터그래밍 게임 프로젝트입니다!  
 C언어와 방탈라이브러리를 이용하여 만들었습니다.  
-(설치 프로젝트 링크입니다.. 용량 문제로 링크로 올려요!)  
+(설치 프로젝트 링크입니다.. 용량 문제로 링크로 올려요! 이미지 파일과 사운드 파일을 다운받아 주세요!)  
 https://drive.google.com/drive/folders/1Qz8GlzUPPr9l2JtbHDI34XYW0Cfwtrzw?usp=sharing         
 _(***visual studio 에서 빌드시에 프로젝트 빌드가 안된다면, 프로젝트 속성 > 우측상단 구성 관리자 > 플랫폼을 확인해주십시오.WIN32, x64)_  
 
