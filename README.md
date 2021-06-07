@@ -27,7 +27,7 @@ https://youtu.be/z4Z8cCupCUc
 
 ![스크린샷(104)](https://user-images.githubusercontent.com/81098888/121002309-2a7a2780-c7c7-11eb-853c-00f4fd90f5a4.png)  
 # 게임2: 마우스 클릭으로 모든 블록을 녹색으로 맞추면 됩니다.  
-# 클릭한 블록과 인접한 블록이 색이 뒤집힙니다.
+# 클릭한 블록과 + 인접한 블록이 색이 뒤집힙니다.
 ![스크린샷(85)](https://user-images.githubusercontent.com/81098888/119534272-af297680-bdc1-11eb-8779-c2c399a1add4.png)
 
 # 게임 3: 키보드 십자키로 이동할 수 있습니다.  
